@@ -1,5 +1,7 @@
 <?php
 
+require 'config.php';
+
 include 'DB.php';
 include 'Forms.php';
 include 'Items.php';
