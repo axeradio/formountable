@@ -1,37 +1,49 @@
-function loadItem(id)
+function loadItem(el, id)
 {
-    $.getJSON('engine/blimey.php?item=' + id, function(data)
+    $(el).parent().addClass('loading');
+    form = $('<table />');
+    $('#form').slideUp('fast', function()
     {
-        form = $('<table />');
-        $.each(data, function(key, value)
+        $.getJSON('engine/blimey.php?item=' + id, function(data)
         {
-            $('<tr />')
-                .append($('<th />').html(value.name))
-                .append($('<td />').html(value.value))
-                .appendTo(form);
+            $.each(data, function(key, value)
+            {
+                $('<tr />')
+                    .append($('<th />').html(value.name))
+                    .append($('<td />').html(value.value))
+                    .appendTo(form);
+            });
+            $('#form').html(form);
+            $('#form').slideDown('fast');
+            $(el).parent().removeClass('loading');
         });
-        $('#form').html(form);
     });
 }
 
-function listItems(id)
+function listItems(el, id)
 {
-    $.getJSON('engine/blimey.php?items&form=' + id, function(data)
+    $(el).parent().addClass('loading');
+    $('#form-' + id + ' ul').slideUp('normal', function()
     {
         $('#form-' + id + ' ul').html('');
-        $.each(data, function(key, value)
+        $.getJSON('engine/blimey.php?items&form=' + id, function(data)
         {
-            $('#form-' + id + ' ul').append(
-                $('<li> />')
-                    .attr('id', 'item-' + value.id)
-                    .html(
-                        $('<a />')
-                            .attr('href', '#item-' + value.id)
-                            .html(value.name + ' <span class="date">' + value.created_at + '</span>')
-                            .click(function()
-                            {
-                                loadItem(value.id);
-                            })));
+            $.each(data, function(key, value)
+            {
+                $('#form-' + id + ' ul').append(
+                    $('<li> />')
+                        .attr('id', 'item-' + value.id)
+                        .html(
+                            $('<a />')
+                                .attr('href', '#item-' + value.id)
+                                .html(value.name + ' <span class="date">' + value.created_at + '</span>')
+                                .click(function()
+                                {
+                                    loadItem(this, value.id);
+                                })));
+            });
+            $('#form-' + id + ' ul').slideDown('normal');
+            $(el).parent().removeClass('loading');
         });
     });
 }
@@ -49,7 +61,7 @@ $(document).ready(function()
                     .html(value.name)
                     .click(function()
                     {
-                        listItems(value.id);
+                        listItems(this, value.id);
                     }))
                 .append($('<ul />'))
                 .appendTo('#forms');

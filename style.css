@@ -60,6 +60,13 @@ div#form table tr:last-child
     border-bottom: none;
 }
 
+ul li.loading
+{
+    background-image: url("spinner.gif");
+    background-position: right top;
+    background-repeat: no-repeat;
+}
+
 ul#forms
 {
     background-color: #f8f8f8;
@@ -99,5 +106,5 @@ ul#forms > li ul
 ul#forms > li ul li
 {
     font-weight: normal;
-    margin: 1em;
+    margin: 1em 0 1em 1em;
 }
